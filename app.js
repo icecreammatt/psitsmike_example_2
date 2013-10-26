@@ -24,11 +24,30 @@ var usernames = {};
 // rooms which are currently available in chat
 var rooms = ['room1','room2','room3'];
 
-var urlExp = /(\b(?:(https?|ftp):\/\/)?((?:www\d{0,3}\.)?([a-z0-9.-]+\.(?:[a-z]{2,4}|museum|travel)(?:\/[^\/\s]+)*))\b)/i;
+var simpleUrl = /(((https|http|ftp|sftp):\/\/)?(\w+\.)+\w+(\/\w+)*\/?(\?[\w|=]*)?)/;
+var imgExp = /\w*\.jpg|\.gif|\.png\b/i;
+var supportedProtocols = ["http", "https", "ftp", "sftp"]; 
+
+function harProtocol(text) {
+		for (var i = 0; i < supportedProtocols.length; i++) {
+			var indexOfProtocol = text.indexOf(supportedProtocols[i]);
+			if (indexOfProtocol === 0) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 function injectHrefs(text) {
-  if (text.match(urlExp)) {
-      text = text.replace(urlExp, "<a href='\$1' target='_blank'>\$1</a>");
+  var match = text.match(simpleUrl);
+  if (match && text.match(imgExp)) {
+      text = "<img src='" + text + "'/>";
+  } else if (match) {
+      if (harProtocol(match[0])) {
+          text = text.replace(simpleUrl, "<a href='\$1' target='_blank'>\$1</a>");
+      } else {
+          text = text.replace(simpleUrl, "<a href='http://\$1' target='_blank'>\$1</a>");
+      }
   }
   return text;
 }

@@ -2,7 +2,7 @@
 <html>
   <head>
   	<script src="/socket.io/socket.io.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 
@@ -17,12 +17,16 @@
 		// on connection to server, ask for user's name with an anonymous callback
 		socket.on('connect', function(){
 			// call the server-side function 'adduser' and send one parameter (value of prompt)
-			socket.emit('adduser', prompt("What's your name?"));
+			username = prompt("What's your name?")
+			$('#user').append(username);
+			socket.emit('adduser', username );
+
+
 		});
 
 		// listener, whenever the server emits 'updatechat', this updates the chat body
 		socket.on('updatechat', function (username, data) {
-            $('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
+            $('#conversation').prepend('<div class="well well-sm">'+username + ':</b> ' + data + '</div>');
 		});
 
 		// listener, whenever the server emits 'updaterooms', this updates the room the client is in
@@ -66,22 +70,10 @@
  <div class="navbar navbar-inverse">
         <div class="container">
           <div class="navbar-header">
-            <a class="navbar-brand" href="#">Miles AWSM Chatroom</a>
+            <a class="navbar-brand" href="#">AWSM Chatstack</a>
           </div>
           <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav" id="rooms">
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Action</a></li>
-                  <li><a href="#">Another action</a></li>
-                  <li><a href="#">Something else here</a></li>
-                  <li class="divider"></li>
-                  <li class="dropdown-header">Nav header</li>
-                  <li><a href="#">Separated link</a></li>
-                  <li><a href="#">One more separated link</a></li>
-                </ul>
-              </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li><a href="https://github.com/anderssv/psitsmike_example_2">Github</a></li>
@@ -89,14 +81,23 @@
           </div><!--/.nav-collapse -->
         </div>
       </div>
-<h1>Helloori</h1>
+<h1>Chatstack</h1>
 
-<div style="float:left;width:100px;border-right:1px solid black;height:300px;padding:10px;overflow:scroll-y;">
-	<b>ROOMS</b>
-	<div id="rooms"></div>
-</div>
-<div style="float:left;width:300px;height:250px;overflow:scroll-y;padding:10px;">
-	<div id="conversation"></div>
-	<input id="data" style="width:200px;" />
-	<input type="button" id="datasend" value="send" />
+<div class="container">
+ <div class="row">
+ <div class="col-lg-6">
+ 	<div class="input-group">
+ 		<span id="user" class="input-group-addon"></span>
+ 		<input id="data" type="text" class="form-control" placeholder="Username"/>
+ 		<span class="input-group-btn">
+ 			<button type="button" class="btn btn-danger" id="datasend" value="send" >Send</button>
+ 		</span>
+ 	</div>	
+ </div>
+ </div>
+ <p>
+  <div class="row col-lg-8">
+  	<div id="conversation"></div>
+  </div>
+
 </div>
