@@ -31,10 +31,10 @@
 			$('#rooms').empty();
 			$.each(rooms, function(key, value) {
 				if(value == current_room){
-					$('#rooms').append('<div>' + value + '</div>');
+					$('#rooms').append('<li class="active"><a href="#" onclick="switchRoom(\''+value+'\')">' + value + '</a></li>')
 				}
 				else {
-					$('#rooms').append('<div><a href="#" onclick="switchRoom(\''+value+'\')">' + value + '</a></div>');
+					$('#rooms').append('<li><a href="#" onclick="switchRoom(\''+value+'\')">' + value + '</a></li>');
 				}
 			});
 		});
@@ -63,7 +63,35 @@
 		});
 	</script>
 </head>
-<h1>Hello</h1>
+
+ <div class="navbar navbar-inverse">
+        <div class="container">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">Miles AWSM Chatroom</a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav" id="rooms">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Action</a></li>
+                  <li><a href="#">Another action</a></li>
+                  <li><a href="#">Something else here</a></li>
+                  <li class="divider"></li>
+                  <li class="dropdown-header">Nav header</li>
+                  <li><a href="#">Separated link</a></li>
+                  <li><a href="#">One more separated link</a></li>
+                </ul>
+              </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="https://github.com/anderssv/psitsmike_example_2">Github</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+<h1>Helloori</h1>
+
 <div style="float:left;width:100px;border-right:1px solid black;height:300px;padding:10px;overflow:scroll-y;">
 	<b>ROOMS</b>
 	<div id="rooms"></div>
