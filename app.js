@@ -119,6 +119,7 @@ io.sockets.on('connection', function (socket) {
 	socket.on('sendchat', function (data) {
 		// we tell the client to execute 'updatechat' with 2 parameters
 		//io.sockets.in(socket.room).emit('updatechat', socket.username, data);
+		data = injectHrefs(data);
 		animate(data).then(function(result) {
 			io.sockets.in(socket.room).emit('updatechat', socket.username, result);
 		});
