@@ -17,6 +17,15 @@ var usernames = {};
 // rooms which are currently available in chat
 var rooms = ['room1','room2','room3'];
 
+var urlExp = /(\b(?:(https?|ftp):\/\/)?((?:www\d{0,3}\.)?([a-z0-9.-]+\.(?:[a-z]{2,4}|museum|travel)(?:\/[^\/\s]+)*))\b)/i;
+
+function injectHrefs(text) {
+  if (text.match(urlExp)) {
+      text = text.replace(urlExp, "<a href='\$1' target='_blank'>\$1</a>");
+  }
+  return text;
+}
+
 io.sockets.on('connection', function (socket) {
 	
 	// when the client emits 'adduser', this listens and executes
@@ -39,7 +48,7 @@ io.sockets.on('connection', function (socket) {
 	// when the client emits 'sendchat', this listens and executes
 	socket.on('sendchat', function (data) {
 		// we tell the client to execute 'updatechat' with 2 parameters
-		io.sockets.in(socket.room).emit('updatechat', socket.username, data);
+		io.sockets.in(socket.room).emit('updatechat', socket.username, injectHrefs(data));
 	});
 	
 	socket.on('switchRoom', function(newroom){
