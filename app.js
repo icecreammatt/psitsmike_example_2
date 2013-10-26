@@ -24,7 +24,7 @@ var usernames = {};
 // rooms which are currently available in chat
 var rooms = ['room1','room2','room3'];
 
-var simpleUrl = /(((https|http|ftp|sftp):\/\/)?(\w+\.)+\w+(\/\w+)*\/?(\?[\w|=]*)?)/;
+var simpleUrl = /(((https|http|ftp|sftp):\/\/)?(\w+\.)+\w+[\/\w+\.]*\/?(\?[\w|=|\.]*)?)+/;
 var imgExp = /\w*\.jpg|\.gif|\.png\b/i;
 var supportedProtocols = ["http", "https", "ftp", "sftp"]; 
 
