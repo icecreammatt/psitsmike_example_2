@@ -55,10 +55,17 @@ function injectHrefs(text) {
 function animate(text) {
 	var deferred = Q.defer();
 	if (text.indexOf("animate me") != -1) {
+		var search_options="";
+
+		if (text.split(" ").length > 2) {
+			search_options = "&tag=" + text.split(" ")[2];
+			console.log(search_options);
+		}
+
 		var random_options = {
 			hostname: 'api.giphy.com',
 			port: 80,
-			path: '/v1/gifs/screensaver?api_key=dc6zaTOxFJmzC',
+			path: '/v1/gifs/screensaver?api_key=dc6zaTOxFJmzC' + search_options,
 			method: 'GET'
 		};
 
