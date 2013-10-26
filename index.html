@@ -18,7 +18,10 @@
 		socket.on('connect', function(){
 			// call the server-side function 'adduser' and send one parameter (value of prompt)
 			username = prompt("What's your name?")
-			$('#user').append(username);
+			var field = $('#user');
+			if (field.contents().length == 0){
+				field.append(username);	
+			}
 			socket.emit('adduser', username );
 
 
