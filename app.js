@@ -1,6 +1,7 @@
 var express = require('express')
   , app = express()
   , http = require('http')
+  , Q = require('q')
   , server = http.createServer(app)
   , io = require('socket.io').listen(server);
 
@@ -33,10 +34,47 @@ function injectHrefs(text) {
 }
 
 function animate(text) {
+	var deferred = Q.defer();
 	if (text.indexOf("animate me") != -1) {
-		text = text + " <img src='http://media.giphy.com/media/KWLYEqWdp5Aty/giphy.gif' />"
+		console.log("Animate!")
+
+		var options = {
+			hostname: 'api.giphy.com',
+			port: 80,
+			path: '/v1/gifs/recent?api_key=dc6zaTOxFJmzC',
+			method: 'GET'
+		};
+
+		var req = http.request(options, function(res) {
+			console.log('STATUS: ' + res.statusCode);
+			console.log('HEADERS: ' + JSON.stringify(res.headers));
+			res.setEncoding('utf8');
+
+			var data = "";
+
+			res.on('data', function (chunk) {
+				data += chunk;
+			});
+
+			res.on('end', function () {
+				json = JSON.parse(data);
+				var min = 0;
+				var max = json.data.length;
+				var random = Math.floor(Math.random() * (max - min + 1)) + min;
+
+				image_url = json.data[random].images.original.url;
+				console.log(image_url);
+
+				deferred.resolve(text + " <img src='" + image_url + "' />");
+			});
+
+		}).end();		
+	} else {
+		console.log("No detect")
+		deferred.resolve(text);
 	}
-	return text;
+
+	return deferred.promise;
 }
 
 io.sockets.on('connection', function (socket) {
@@ -61,7 +99,10 @@ io.sockets.on('connection', function (socket) {
 	// when the client emits 'sendchat', this listens and executes
 	socket.on('sendchat', function (data) {
 		// we tell the client to execute 'updatechat' with 2 parameters
-		io.sockets.in(socket.room).emit('updatechat', socket.username, animate(injectHrefs(data)));
+		//io.sockets.in(socket.room).emit('updatechat', socket.username, data);
+		animate(data).then(function(result) {
+			io.sockets.in(socket.room).emit('updatechat', socket.username, result);
+		});
 	});
 	
 	socket.on('switchRoom', function(newroom){
