@@ -77,9 +77,7 @@ function animate(text) {
 
 			res.on('end', function () {
 				json = JSON.parse(data);
-				var min = 0;
-				var max = json.data.length;
-				var random = Math.floor(Math.random() * (max - min + 1)) + min;
+				var random = Math.floor(Math.random() * (json.data.length + 1));
 
 				image_url = json.data[random].images.original.url;
 				console.log(image_url);
