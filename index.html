@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -14,7 +13,7 @@
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 	<script>
 		var socket = io.connect('http://' + window.location.host);
-
+        
 		// on connection to server, ask for user's name with an anonymous callback
 		socket.on('connect', function(){
 			// call the server-side function 'adduser' and send one parameter (value of prompt)
@@ -23,7 +22,7 @@
 
 		// listener, whenever the server emits 'updatechat', this updates the chat body
 		socket.on('updatechat', function (username, data) {
-			$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
+            $('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
 		});
 
 		// listener, whenever the server emits 'updaterooms', this updates the room the client is in
