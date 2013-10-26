@@ -85,10 +85,14 @@ function animate(text) {
 			});
 
 			res.on('end', function () {
-				json = JSON.parse(data);
-				image_url = random_parse(json);
+				if (res.statusCode != 200) {
+					deferred.resolve(text + " NOT FOUND");
+				} else {
+					json = JSON.parse(data);
+					image_url = random_parse(json);
 
-				deferred.resolve(text + " <img src='" + image_url + "' />");
+					deferred.resolve(text + " <img src='" + image_url + "' />");					
+				}
 			});
 
 		}).end();		
