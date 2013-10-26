@@ -3,6 +3,15 @@
 <script>
 	var socket = io.connect('http://localhost:8080');
 
+	var urlExp = /(\b(?:(https?|ftp):\/\/)?((?:www\d{0,3}\.)?([a-z0-9.-]+\.(?:[a-z]{2,4}|museum|travel)(?:\/[^\/\s]+)*))\b)/i;
+
+	function injectHrefs(text) {
+		if (text.match(urlExp)) {
+			text = text.replace(urlExp, "<a href='\$1'>\$1</a>");
+		}
+		return text;
+	}
+
 	// on connection to server, ask for user's name with an anonymous callback
 	socket.on('connect', function(){
 		// call the server-side function 'adduser' and send one parameter (value of prompt)
@@ -11,7 +20,8 @@
 
 	// listener, whenever the server emits 'updatechat', this updates the chat body
 	socket.on('updatechat', function (username, data) {
-		$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
+		var hreffedData = injectHrefs(data);
+		$('#conversation').append('<b>'+username + ':</b> ' + hreffedData + '<br>');
 	});
 
 	// listener, whenever the server emits 'updaterooms', this updates the room the client is in
