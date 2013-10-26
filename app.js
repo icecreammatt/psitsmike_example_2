@@ -43,13 +43,30 @@ function injectHrefs(text) {
   if (match && text.match(imgExp)) {
       text = "<img src='" + text + "'/>";
   } else if (match) {
-      if (harProtocol(match[0])) {
-          text = text.replace(simpleUrl, "<a href='\$1' target='_blank'>\$1</a>");
-      } else {
-          text = text.replace(simpleUrl, "<a href='http://\$1' target='_blank'>\$1</a>");
-      }
+  	var urls = fetchURLS(text);
+		if (urls) {
+			for (var i in urls) {
+				text = text.replace(i, "<a href='" + urls[i] + "'>" + i + "</a>");
+			}
+		}
   }
   return text;
+}
+
+function fetchURLS(text, urls) {
+	urlStore = urls || [];
+	var match = text.match(simpleUrl);
+	if (match) {
+		if (harProtocol(match[0])) {
+			urlStore[match[0]] = match[0];						
+		} else {
+			urlStore[match[0]] = "http://" + match[0];
+		}
+		var cut = match.index + match[0].length;
+		var cutString = text.substring(cut);
+		urlStore = fetchURLS(cutString, urlStore);
+	}
+	return urlStore;
 }
 
 function animate(text) {
