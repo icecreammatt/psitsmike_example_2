@@ -4,7 +4,13 @@ var express = require('express')
   , server = http.createServer(app)
   , io = require('socket.io').listen(server);
 
-server.listen(8080);
+var server_port = process.argv[2]
+
+if (!server_port) {
+	server.listen(8080)
+} else {
+	server.listen(server_port);
+}
 
 // routing
 app.get('/', function (req, res) {
