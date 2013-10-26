@@ -24,9 +24,12 @@ var usernames = {};
 var rooms = ['room1','room2','room3'];
 
 var urlExp = /(\b(?:(https?|ftp):\/\/)?((?:www\d{0,3}\.)?([a-z0-9.-]+\.(?:[a-z]{2,4}|museum|travel)(?:\/[^\/\s]+)*))\b)/i;
+var imgExp = /\w*\.jpg|\.gif|\.png\b/i;
 
 function injectHrefs(text) {
-  if (text.match(urlExp)) {
+  if (text.match(urlExp) && text.match(imgExp)) {
+      text = "<img src='" + text + "'/>";
+  } else if (text.match(urlExp)) {
       text = text.replace(urlExp, "<a href='\$1' target='_blank'>\$1</a>");
   }
   return text;
