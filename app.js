@@ -24,7 +24,7 @@ var usernames = {};
 // rooms which are currently available in chat
 var rooms = ['room1','room2','room3'];
 
-var simpleUrl = /(((https|http|ftp|sftp):\/\/)?(\w+\.)+\w+(\/\w+)*\/?(\?[\w|=]*)?)/;
+var simpleUrl = /(((https|http|ftp|sftp):\/\/)?(\w+\.)+\w+[\/\w+\.]*\/?(\?[\w|=|\.]*)?)+/;
 var imgExp = /\w*\.jpg|\.gif|\.png\b/i;
 var supportedProtocols = ["http", "https", "ftp", "sftp"]; 
 
@@ -55,16 +55,25 @@ function injectHrefs(text) {
 function animate(text) {
 	var deferred = Q.defer();
 	if (text.indexOf("animate me") != -1) {
-		console.log("Animate!")
+		var search_options="";
 
-		var options = {
+		if (text.split(" ").length > 2) {
+			search_options = "&tag=" + text.split(" ")[2];
+			console.log(search_options);
+		}
+
+		var random_options = {
 			hostname: 'api.giphy.com',
 			port: 80,
-			path: '/v1/gifs/recent?api_key=dc6zaTOxFJmzC',
+			path: '/v1/gifs/screensaver?api_key=dc6zaTOxFJmzC' + search_options,
 			method: 'GET'
 		};
 
-		var req = http.request(options, function(res) {
+		var random_parse = function(json) {
+			return json.data.image_original_url;
+		}
+
+		var req = http.request(random_options, function(res) {
 			console.log('STATUS: ' + res.statusCode);
 			console.log('HEADERS: ' + JSON.stringify(res.headers));
 			res.setEncoding('utf8');
@@ -77,19 +86,13 @@ function animate(text) {
 
 			res.on('end', function () {
 				json = JSON.parse(data);
-				var min = 0;
-				var max = json.data.length;
-				var random = Math.floor(Math.random() * (max - min + 1)) + min;
-
-				image_url = json.data[random].images.original.url;
-				console.log(image_url);
+				image_url = random_parse(json);
 
 				deferred.resolve(text + " <img src='" + image_url + "' />");
 			});
 
 		}).end();		
 	} else {
-		console.log("No detect")
 		deferred.resolve(text);
 	}
 
@@ -119,6 +122,7 @@ io.sockets.on('connection', function (socket) {
 	socket.on('sendchat', function (data) {
 		// we tell the client to execute 'updatechat' with 2 parameters
 		//io.sockets.in(socket.room).emit('updatechat', socket.username, data);
+		data = injectHrefs(data);
 		animate(data).then(function(result) {
 			io.sockets.in(socket.room).emit('updatechat', socket.username, result);
 		});
