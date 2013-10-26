@@ -55,16 +55,18 @@ function injectHrefs(text) {
 function animate(text) {
 	var deferred = Q.defer();
 	if (text.indexOf("animate me") != -1) {
-		console.log("Animate!")
-
-		var options = {
+		var random_options = {
 			hostname: 'api.giphy.com',
 			port: 80,
-			path: '/v1/gifs/recent?api_key=dc6zaTOxFJmzC',
+			path: '/v1/gifs/screensaver?api_key=dc6zaTOxFJmzC',
 			method: 'GET'
 		};
 
-		var req = http.request(options, function(res) {
+		var random_parse = function(json) {
+			return json.data.image_original_url;
+		}
+
+		var req = http.request(random_options, function(res) {
 			console.log('STATUS: ' + res.statusCode);
 			console.log('HEADERS: ' + JSON.stringify(res.headers));
 			res.setEncoding('utf8');
@@ -77,17 +79,13 @@ function animate(text) {
 
 			res.on('end', function () {
 				json = JSON.parse(data);
-				var random = Math.floor(Math.random() * (json.data.length + 1));
-
-				image_url = json.data[random].images.original.url;
-				console.log(image_url);
+				image_url = random_parse(json);
 
 				deferred.resolve(text + " <img src='" + image_url + "' />");
 			});
 
 		}).end();		
 	} else {
-		console.log("No detect")
 		deferred.resolve(text);
 	}
 
