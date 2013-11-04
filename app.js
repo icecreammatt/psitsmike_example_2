@@ -8,7 +8,7 @@ var express = require('express')
 var server_port = process.argv[2]
 
 if (!server_port) {
-	server.listen(8080)
+	server.listen(3000)
 } else {
 	server.listen(server_port);
 }
