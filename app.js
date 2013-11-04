@@ -26,7 +26,7 @@ var rooms = ['room1','room2','room3'];
 
 var simpleUrl = /(((https|http|ftp|sftp):\/\/)?(\w+\.)+\w+[\/\w+\.]*\/?(\?[\w|=|\.]*)?)+/;
 var imgExp = /\w*\.jpg|\.gif|\.png\b/i;
-var supportedProtocols = ["http", "https", "ftp", "sftp"]; 
+var supportedProtocols = ["https", "ftp", "sftp"]; 
 
 function harProtocol(text) {
 		for (var i = 0; i < supportedProtocols.length; i++) {
