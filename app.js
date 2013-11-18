@@ -18,6 +18,10 @@ app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
 });
 
+app.post('/', function(req, res) {
+  res.sendfile(__dirname + '/index.html');
+});
+
 // usernames which are currently connected to the chat
 var usernames = {};
 
