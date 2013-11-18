@@ -8,13 +8,17 @@ var express = require('express')
 var server_port = process.argv[2]
 
 if (!server_port) {
-	server.listen(3000)
+	server.listen(9000);
 } else {
 	server.listen(server_port);
 }
 
 // routing
 app.get('/', function (req, res) {
+  res.sendfile(__dirname + '/index.html');
+});
+
+app.post('/', function(req, res) {
   res.sendfile(__dirname + '/index.html');
 });
 
