@@ -1,14 +1,14 @@
-var express = require('express')
-  , app = express()
-  , http = require('http')
-  , Q = require('q')
-  , server = http.createServer(app)
-  , io = require('socket.io').listen(server);
+var express = require('express'),
+  app = express(),
+  http = require('http'),
+  Q = require('q'),
+  server = http.createServer(app),
+  io = require('socket.io').listen(server);
 
-var server_port = process.argv[2]
+var server_port = process.argv[2];
 
 if (!server_port) {
-	server.listen(3000)
+	server.listen(3000);
 } else {
 	server.listen(server_port);
 }
@@ -47,7 +47,7 @@ function injectHrefs(text) {
   if (match && text.match(imgExp)) {
       text = "<img src='" + text + "'/>";
   } else if (match) {
-  	var urls = fetchURLS(text);
+	var urls = fetchURLS(text);
 		if (urls) {
 			for (var i in urls) {
 				text = text.replace(i, "<a href='" + urls[i] + "'>" + i + "</a>");
@@ -92,7 +92,7 @@ function animate(text) {
 
 		var random_parse = function(json) {
 			return json.data.image_original_url;
-		}
+		};
 
 		var req = http.request(random_options, function(res) {
 			console.log('STATUS: ' + res.statusCode);
